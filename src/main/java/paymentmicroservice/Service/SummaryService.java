@@ -1,6 +1,5 @@
 package paymentmicroservice.Service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -10,9 +9,7 @@ import paymentmicroservice.Models.*;
 import paymentmicroservice.Repository.SummaryRepo;
 import paymentmicroservice.Validation.BasicValidation;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 import static paymentmicroservice.Service.ConstantVariable.*;
