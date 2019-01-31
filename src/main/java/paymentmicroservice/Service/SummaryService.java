@@ -126,7 +126,6 @@ public class SummaryService {
 
         }
         catch (Exception e){
-            //System.out.println(e);
             return false;
         }
 

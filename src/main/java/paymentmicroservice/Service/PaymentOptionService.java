@@ -33,6 +33,12 @@ public class PaymentOptionService {
 
 
       //Controller Function
+    /*
+    This Function returns the list of available payment options for a particular orderId based on
+    1.ProductIds supported for COD
+    2.Total amount
+    3.Whether particular option is currently active or not
+     */
     public ResponseEntity<CustomResponse> getOptions(Order order)
     {
         try {
@@ -54,6 +60,7 @@ public class PaymentOptionService {
             Response response = new Response();
             response.options = paymentOptions;
             response.orderId = orderId;
+            response.amount = amount;
             return ResponseEntity.status(HttpStatus.OK).body(new CustomResponse(200, "OK", response));
         }
         catch (NullPointerException e)
@@ -61,7 +68,15 @@ public class PaymentOptionService {
             return ResponseEntity.status(HttpStatus.OK).body(new CustomResponse(400, "Couldn't Save Data", null));
         }
     }
-    // Controller Function
+
+    //Controller Function
+    /*
+    This Function Varyfies the payment user has selected
+    1.ProductIds supported for COD
+    2.Total amount
+    3.Whether particular option is currently active or not
+     */
+
     public ResponseEntity<CustomResponse> validate(PaymentOptionSelected paymentOptionSelected)
     {
         try {
@@ -79,6 +94,7 @@ public class PaymentOptionService {
                     if (paymentOptions.contains(optionSelected)) {
                         temp.add(optionSelected);
                         response.options = temp;
+                        response.amount =amount;
                         Summary summary = new Summary(paymentOptionSelected.orderId, optionSelected, null, null, amount, null);
                         summary=summaryService.save(summary);
                         System.out.println(summary.getModOfPayment());
@@ -95,7 +111,7 @@ public class PaymentOptionService {
         }
     }
 
-     //
+     //Returns the list of payment options
     public List<String> getPaymentOption(List<String>productIds,float amount)
     {
         List<String> paymentOptions=paymentOptionRepo.getOptions();
@@ -110,6 +126,7 @@ public class PaymentOptionService {
         return paymentOptions;
     }
 
+    //It checks whether COD is present in the payment option list
     public boolean hasCOD(List<String>paymentOptions)
     {
         for(String paymentOption:paymentOptions)
@@ -120,7 +137,7 @@ public class PaymentOptionService {
         return false;
     }
 
-
+    //It checks whether products not supported COD
     public boolean codNotAvailable(List<String>productIds)
     {
         for (String id:productIds)
@@ -131,6 +148,10 @@ public class PaymentOptionService {
         return false;
     }
 
+  /*
+  This will return the list of productIds , amount corresponding to particular order Id
+  from Order-Micro service(MS-4)
+   */
     public CheckOut getAllDetails(String orderId)
     {
         try {

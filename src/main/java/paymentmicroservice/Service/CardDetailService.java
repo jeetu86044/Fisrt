@@ -47,6 +47,7 @@ public class CardDetailService {
                     temp.add("data Saved Successfully");
                     response.orderId = cardDetail.getOrderId();
                     response.options = temp;
+                    response.amount = summary.getAmount();
                     cardDetailRepo.save(cardDetail);
                     return ResponseEntity.status(HttpStatus.OK).body(new CustomResponse(200, "OK", response));
                 }

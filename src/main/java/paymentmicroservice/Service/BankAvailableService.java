@@ -22,6 +22,10 @@ public class BankAvailableService {
     SummaryService summaryService;
     @Autowired
     BasicValidation basicValidation;
+    /*
+    This will returns the list of banks available based on the status of bank
+     if user has choosen NetBanking
+     */
     public ResponseEntity<CustomResponse> getBanks(Order order)
     {
         try {
@@ -32,6 +36,7 @@ public class BankAvailableService {
             if(response.options==null)
                 throw new NullPointerException();
             response.orderId = order.orderId;
+            response.amount =summaryService.getAmount(order.orderId);
             return ResponseEntity.status(HttpStatus.OK).body(new CustomResponse(200, "OK", response));
         }
         catch (NullPointerException e){
@@ -41,7 +46,9 @@ public class BankAvailableService {
             return ResponseEntity.status(HttpStatus.OK).body(new CustomResponse(404, "Something Went Wrong", new Response()));
         }
     }
-
+   /*
+   Checks whether user has choosen NetBanking
+    */
     public boolean validateNetbanking(String orderId)
     {
         Optional optional =summaryService.getSummary(orderId);
@@ -53,7 +60,9 @@ public class BankAvailableService {
         }
         return false;
     }
-
+    /*
+    This will validate the Bank choosen by user if user has opted NetBanking
+     */
     public ResponseEntity<CustomResponse> validateBank(PaymentOptionSelected paymentOptionSelected)
     {
         try {
@@ -61,6 +70,7 @@ public class BankAvailableService {
             if (!(basicValidation.validateString(paymentOptionSelected.orderId) && validateNetbanking(paymentOptionSelected.orderId)))
                 return ResponseEntity.status(HttpStatus.OK).body(new CustomResponse(404, "You have not selected NetBanking", new Response()));
             response.orderId = paymentOptionSelected.orderId;
+            response.amount = summaryService.getAmount(paymentOptionSelected.orderId);
             BankAvailable bankAvailable = bankAvailableRepo.findByName(paymentOptionSelected.optionSelected);
             List<String> temp = new ArrayList<>();
             if (bankAvailable == null) {
