@@ -32,9 +32,10 @@ public class BankAvailableService {
             Response response = new Response();
             if (!(basicValidation.validateString(order.orderId) && validateNetbanking(order.orderId)))
                 return ResponseEntity.status(HttpStatus.OK).body(new CustomResponse(404, "You have not selected NetBanking", new Response()));
+
             response.options = bankAvailableRepo.getAllBankS();
-            if(response.options==null)
-                throw new NullPointerException();
+            //if(response.options==null)
+              //  throw new NullPointerException();
             response.orderId = order.orderId;
             response.amount =summaryService.getAmount(order.orderId);
             return ResponseEntity.status(HttpStatus.OK).body(new CustomResponse(200, "OK", response));
@@ -65,6 +66,8 @@ public class BankAvailableService {
      */
     public ResponseEntity<CustomResponse> validateBank(PaymentOptionSelected paymentOptionSelected)
     {
+
+
         try {
             Response response = new Response();
             if (!(basicValidation.validateString(paymentOptionSelected.orderId) && validateNetbanking(paymentOptionSelected.orderId)))

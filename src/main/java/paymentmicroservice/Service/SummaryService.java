@@ -87,6 +87,7 @@ public class SummaryService {
                     summary.setDate(date);
                     summary.setSuccess(status);
                     summary=save(summary);
+
                     if(summary!=null&&sendResponse(summary))
                         return ResponseEntity.status(HttpStatus.OK).body(new CustomResponse(200, "OK", response));
                     else{
